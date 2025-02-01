@@ -1,0 +1,52 @@
+import random
+from textblob import TextBlob
+from textblob.np_extractors import ConllExtractor
+extractor= ConllExtractor()
+
+
+negatif_cevap=["üzücü, biraz daha detay verirmisin",
+"can sıkıcı bir durum bence biraz daha anlatırmısın",
+"bu seni üzdümü? biraz moralin bozulmuş gibi"]
+
+notr_cevap=["ilginç, sonra ne oldu?",
+ "sence de normal bir durum değil mi bu",
+ "pekala, başka detaylar var mı"]
+
+pozitif_cevap=["güzel, başka anlatacakların varmı",
+"iyi bir şey bence sen ne düşünüyorsun",
+"pozitif bir durum değil mi"]
+
+iyi_cevap=["harika başka neler var",
+"çok sevindim sen ne düşünüyorsun",
+"mükemmel değil mi"]
+print("merhaba benim ismim isot, basit bir robotum, ingilizce sorularınıza rastgele türkçe cevaplar veriyorum")
+print ("bu konuşmayi 'bye' yazarak bitirebilirsin")
+print ("her cavaptan sonra enter a basin")
+print("Nasilsin")
+
+while True:
+    
+    user_input = input("> ")
+    if user_input.lower()=="bye":
+        break
+    else: 
+       user_input_blob = TextBlob(user_input, np_extractor=extractor)                        
+       np = user_input_blob.noun_phrases   
+       cevap= ""
+    if user_input_blob.polarity<=-0.5:
+        cevap=random.choices(negatif_cevap)[0]
+    elif user_input_blob.polarity<=0:
+        cevap=random.choices(notr_cevap)[0]
+    elif user_input_blob.polarity<0.5:
+        cevap=random.choices(pozitif_cevap)[0]
+    elif user_input_blob.polarity<=1:
+        cevap=random.choices(iyi_cevap)[0]
+
+
+    if len(np)!=0:
+        cevap=cevap+" başka ne anlatabilirsin "+ np[0].pluralize()+ "hakkında?"
+    else:
+        cevap=cevap+""
+    print(cevap)
+
+print("güzel sohbetti hoşçakal")
